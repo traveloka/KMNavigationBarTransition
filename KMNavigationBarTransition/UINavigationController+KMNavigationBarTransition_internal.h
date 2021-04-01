@@ -26,6 +26,7 @@
 @interface UINavigationController (KMNavigationBarTransition_internal)
 
 @property (nonatomic, assign) BOOL km_backgroundViewHidden;
+@property (nonatomic, assign) BOOL km_disableBackgroundViewHidden;
 @property (nonatomic, weak) UIViewController *km_transitionContextToViewController;
 
 @end

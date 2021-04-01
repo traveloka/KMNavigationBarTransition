@@ -29,6 +29,8 @@
 #import <objc/runtime.h>
 #import "KMSwizzle.h"
 
+BOOL disableBackgroundViewHidden = NO;
+
 @implementation UINavigationController (KMNavigationBarTransition)
 
 + (void)load {
@@ -154,11 +156,20 @@
 }
 
 - (void)setKm_backgroundViewHidden:(BOOL)hidden {
-    objc_setAssociatedObject(self, @selector(km_backgroundViewHidden), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [[self.navigationBar valueForKey:@"_backgroundView"]
-     setHidden:hidden];
+    if (!self.km_disableBackgroundViewHidden) {
+        objc_setAssociatedObject(self, @selector(km_backgroundViewHidden), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [[self.navigationBar valueForKey:@"_backgroundView"]
+         setHidden:hidden];
+    }
 }
 
+- (BOOL)km_disableBackgroundViewHidden {
+    return disableBackgroundViewHidden;
+}
+
+- (void)setKm_disableBackgroundViewHidden:(BOOL)disable {
+    disableBackgroundViewHidden = disable;
+}
 - (UIViewController *)km_transitionContextToViewController {
     return km_objc_getAssociatedWeakObject(self, _cmd);
 }
